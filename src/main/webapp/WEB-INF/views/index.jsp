@@ -11,6 +11,6 @@
     <title>欢迎首页</title>
 </head>
 <body>
-    成功！
+    成功！ ${sessionScope.currentUser.name}
 </body>
 </html>

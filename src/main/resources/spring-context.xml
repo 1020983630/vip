@@ -8,14 +8,37 @@
     <context:component-scan base-package="com.example.vip.function"/>
 
     <!--配置数据源-->
-    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <property name="driverClass" value="org.mariadb.jdbc.Driver"/>
-        <property name="jdbcUrl" value="jdbc:mariadb://localhost:3306/vip"/>
-        <property name="user" value="root"/>
-        <property name="password" value="root"/>
-        <property name="initialPoolSize" value="2"/>
-        <property name="maxPoolSize" value="10"/>
-        <property name="acquireIncrement" value="2"/>
+    <!--<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">-->
+        <!--<property name="driverClass" value="org.mariadb.jdbc.Driver"/>-->
+        <!--<property name="jdbcUrl" value="jdbc:mariadb://localhost:3306/vip"/>-->
+        <!--<property name="user" value="root"/>-->
+        <!--<property name="password" value="root"/>-->
+        <!--<property name="initialPoolSize" value="2"/>-->
+        <!--<property name="maxPoolSize" value="10"/>-->
+        <!--<property name="acquireIncrement" value="2"/>-->
+    <!--</bean>-->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+        <property name="driverClassName" value="org.mariadb.jdbc.Driver" />
+        <property name="jdbcUrl" value="jdbc:mariadb://localhost:3306/vip"> </property>
+        <property name="username" value="root" />
+        <property name="password" value="root" />
+        <property name="readOnly" value="false" />
+        <!-- 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 缺省:30秒 -->
+        <property name="connectionTimeout" value="10000" />
+        <!-- 一个连接idle状态的最大时长（毫秒），超时则被释放（retired），缺省:10分钟 -->
+        <property name="idleTimeout" value="120000" />
+        <!-- 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired），缺省:30分钟，建议设置比数据库超时时长少30秒，参考MySQL wait_timeout参数（show variables like '%timeout%';） -->
+        <property name="maxLifetime" value="240000" />
+        <!-- 连接池中允许的最大连接数。缺省值：10；推荐的公式：((core_count * 2) + effective_spindle_count) -->
+        <property name="maximumPoolSize" value="100" />
+        <!--<property name="connectionTestQuery" value="/* ping */ SELECT 1" /> -->
+        <!--<property name="dataSourceProperties">-->
+            <!--<props>-->
+                <!--<prop key="cachePrepStmts">true</prop>-->
+                <!--<prop key="prepStmtCacheSize"> 250</prop>-->
+                <!--<prop key="prepStmtCacheSqlLimit">2048</prop>-->
+            <!--</props>-->
+        <!--</property>-->
     </bean>
 
     <!--配置事务管理器-->
@@ -25,4 +48,19 @@
 
     <!--使用注解控制事务-->
     <tx:annotation-driven/>
+
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:mapper/*.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.example.vip.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"/>
+    </bean>
 </beans>
