@@ -1,6 +1,6 @@
 package com.example.vip.function.impl;
 
-import static com.example.common.ThisSystemUtil.*;
+import static com.example.common.AssertThrowUtil.*;
 
 import com.example.common.ThisSystemException;
 import com.example.vip.dao.UserDao;
@@ -15,11 +15,11 @@ public class UserFunctionImpl implements UserFunction {
     private UserDao userDao;
 
     @Override
-    public UserEntity login(String account, String password) {
+    public UserEntity login(String account, String password) throws Exception {
         account = $("账户不能为空", account);
         password = $("密码不能为空", password);
 
-        UserEntity userEntity = userDao.selectByAccount(account);
+        UserEntity userEntity = userDao.select("account", account);
 
         if (userEntity == null) {
             throw new ThisSystemException("账户不存在！");
