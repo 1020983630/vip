@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -31,6 +32,17 @@ public class LoginHandler {
     @RequestMapping("/index.do")
     public String index() {
         return "index";
+    }
+
+    @RequestMapping("/welcome.do")
+    public String welcome() {
+        return "welcome";
+    }
+
+    @RequestMapping("/logout.do")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login.jsp";
     }
 
 
