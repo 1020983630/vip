@@ -32,17 +32,21 @@
             position: absolute;
             top: 80px;
             bottom: 0px;
-            width: 100px;
+            width: 100%;
         }
         .body>menu{
-            float: left;
+            position: absolute;
+            left: 0;
             width: 200px;
             height: 100%;
             background: #eee;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
         }
         .body>main{
-            padding-left: 200px;
-            height: 100px;
+            margin-left: 200px;
+            height: 100%;
         }
         main>iframe{
             height: 100%;
@@ -69,11 +73,11 @@
                 <li><a>查看vip消费记录</a></li>
                 <li><a>录入VIP消费记录</a></li>
                 <li><a>VIP消费记录管理</a></li>
-                <li><a>修改密码</a></li>
+                <li><a href="updatePassword.do" target="mainFrame">修改密码</a></li>
             </ul>
         </menu>
         <main>
-            <iframe src="welcome.jsp"></iframe>
+            <iframe name="mainFrame" src="welcome.do"></iframe>
         </main>
     </section>
 </body>

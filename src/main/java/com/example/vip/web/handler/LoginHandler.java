@@ -1,11 +1,13 @@
 package com.example.vip.web.handler;
 
+import com.example.common.ThisSystemException;
 import com.example.vip.entity.UserEntity;
 import com.example.vip.function.UserFunction;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.support.SessionStatus;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +44,26 @@ public class LoginHandler {
     @RequestMapping("/logout.do")
     public String logout(HttpSession session) {
         session.invalidate();
+        return "redirect:/login.jsp";
+    }
+
+    @RequestMapping(value = "/updatePassword.do", method = RequestMethod.GET)
+    public String updatePasswordView() {
+        return null;
+    }
+
+    @RequestMapping(value = "/updatePassword.do", method = RequestMethod.POST)
+    public String updatePassword(String oldPassword, String newPassword, String newPasswordConfirm, HttpServletRequest request) throws Exception {
+        HttpSession httpSession = request.getSession();
+        UserEntity user = (UserEntity) httpSession.getAttribute("currentUser");
+        try {
+            function.updatePassword(user.getId(), oldPassword, newPassword, newPasswordConfirm);
+        } catch (ThisSystemException e) {
+            request.setAttribute("message", e.getMessage());
+            e.printStackTrace();
+            return "updatePassword";
+        }
+        httpSession.setAttribute("message", "修改成功，请重新登陆！");
         return "redirect:/login.jsp";
     }
 
